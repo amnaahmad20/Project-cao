@@ -1,6 +1,6 @@
 #include <Adafruit_Fingerprint.h>
 
-
+//we use pin 2 and 3 for arduino 
 #if (defined(__AVR__) || defined(ESP8266)) && !defined(__AVR_ATmega2560__)
 SoftwareSerial mySerial(2, 3);
 
