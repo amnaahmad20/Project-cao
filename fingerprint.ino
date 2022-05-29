@@ -1,11 +1,12 @@
 
+//using inbuilt libraries
 #include <Adafruit_Fingerprint.h>   //https://github.com/adafruit/Adafruit-Fingerprint-Sensor-Library
 #include <HardwareSerial.h>
 #include <Adafruit_GFX.h>           //https://github.com/adafruit/Adafruit-GFX-Library
 #include <Adafruit_SSD1306.h>       //https://github.com/adafruit/Adafruit_SSD1306
 #include <SPI.h>
 #include <Wire.h>
- 
+ // predefining the width and height of led
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
  
@@ -16,6 +17,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 // Icon of Fingerprint
 #define LOGO_HEIGHT   64
 #define LOGO_WIDTH    128
+//it is just the grid for thumb impression that will visible on oled
 static const unsigned char PROGMEM logo_bmp[] =
 {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -83,12 +85,12 @@ static const unsigned char PROGMEM logo_bmp[] =
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
- 
+ // as i use the serial 2 UART for the fingerprint sensor transfer and reciever pin
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&Serial2);
- 
+ //initilaizing pin of buzzer and relay
 int relayPin = 23;
 int buzzerPin = 15;
- 
+ //
 void setup()
 {
  pinMode(relayPin, OUTPUT);
@@ -99,7 +101,7 @@ void setup()
  
  Serial.begin(57600);
  Serial2.begin(115200);
- 
+ //oled fails to display
 if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) 
 { 
     Serial.println(F("SSD1306 allocation failed"));
@@ -109,17 +111,19 @@ if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
  while (!Serial); 
  delay(100);
  
- display.clearDisplay();
- display.drawBitmap(0, 0, logo_bmp, LOGO_WIDTH, LOGO_HEIGHT, 1);
+ display.clearDisplay();//clears display screen
+ display.drawBitmap(0, 0, logo_bmp, LOGO_WIDTH, LOGO_HEIGHT, 1);//make the thumb impression on oled
  display.display();
  
  Serial.println("Fingerprint Door Lock");
- delay(3000);
+ delay(3000);//simple delay function 
  display.clearDisplay();
  
  // set the data rate for the sensor serial port
  finger.begin(57600);
- 
+ //if-else to check the connectivity of sensor
+ //also with some display functions to display text on the oled
+ //if  statement for the connection 
  if (finger.verifyPassword()) 
  {
    Serial.println("Fingerprint Sensor Connected");
@@ -134,7 +138,7 @@ if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
    delay(3000); 
   // display.clearDisplay();
  }
- 
+ //else statement for the connectivity issue
  else  
  {
    display.clearDisplay();
@@ -149,7 +153,7 @@ if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
    Serial.println("Unable to find Sensor");
    delay(3000);
    Serial.println("Check Connections");
- 
+ //delay.............
    while (1) {
      delay(1);
    }
@@ -162,7 +166,7 @@ void loop()                     // run over and over again
  getFingerprintIDez();
  delay(50);            //don't need to run this at full speed.
 }
- 
+ //getting idss
 // returns -1 if failed, otherwise returns ID #
 int getFingerprintIDez() 
 {
@@ -214,7 +218,9 @@ int getFingerprintIDez()
    return -1;
  }
  
- // found a match!
+ // found a match functions
+ //functions to match 
+ //function to display comments 
    display.clearDisplay();
    display.setTextSize(2);             // Normal 1:1 pixel scale
    display.setTextColor(SSD1306_WHITE);        // Draw white text
@@ -225,11 +231,11 @@ int getFingerprintIDez()
    display.setCursor(20, 40);
    display.println("Welcome");
    display.display();
-   
+ //relay pin is high to open the door lock  
    digitalWrite(relayPin, HIGH);
    digitalWrite(buzzerPin, HIGH);
    delay(3000);
-   
+   //after the delay of 3000 relay is again high to closed the door lock  
    display.clearDisplay();
    display.setTextSize(2);             // Normal 1:1 pixel scale
    display.setTextColor(SSD1306_WHITE);        // Draw white text
@@ -238,13 +244,13 @@ int getFingerprintIDez()
    display.setCursor(20, 30);            // Start at top-left corner
    display.println(("the Door"));
    display.display();
-   
+   //after the delay of 3000 relay is again high to closed the door lock
    digitalWrite(relayPin, LOW);
    digitalWrite(buzzerPin, LOW);
    delay(3000);
    
    display.clearDisplay();
-   
+   //doorunlocked finally!!!!
    Serial.println("Door Unlocked Welcome");
    
    return finger.fingerID;
