@@ -1,28 +1,7 @@
-/***************************************************
-  This is an example sketch for our optical Fingerprint sensor
-
-  Designed specifically to work with the Adafruit BMP085 Breakout
-  ----> http://www.adafruit.com/products/751
-
-  These displays use TTL Serial to communicate, 2 pins are required to
-  interface
-  Adafruit invests time and resources providing this open source code,
-  please support Adafruit and open-source hardware by purchasing
-  products from Adafruit!
-
-
-  Written by Limor Fried/Ladyada for Adafruit Industries.
-  BSD license, all text above must be included in any redistribution
- ****************************************************/
-
 #include <Adafruit_Fingerprint.h>
 
 
 #if (defined(__AVR__) || defined(ESP8266)) && !defined(__AVR_ATmega2560__)
-// For UNO and others without hardware serial, we must use software serial...
-// pin #2 is IN from sensor (GREEN wire)
-// pin #3 is OUT from arduino  (WHITE wire)
-// Set up the serial port to use softwareserial..
 SoftwareSerial mySerial(2, 3);
 
 #else
@@ -56,6 +35,7 @@ void setup()
 
   Serial.println(F("Reading sensor parameters"));
   finger.getParameters();
+  // now all the lines show related information to status , system etc
   Serial.print(F("Status: 0x")); Serial.println(finger.status_reg, HEX);
   Serial.print(F("Sys ID: 0x")); Serial.println(finger.system_id, HEX);
   Serial.print(F("Capacity: ")); Serial.println(finger.capacity);
@@ -64,7 +44,7 @@ void setup()
   Serial.print(F("Packet len: ")); Serial.println(finger.packet_len);
   Serial.print(F("Baud rate: ")); Serial.println(finger.baud_rate);
 }
-
+//initializing the num variable
 uint8_t readnumber(void) {
   uint8_t num = 0;
 
@@ -74,7 +54,7 @@ uint8_t readnumber(void) {
   }
   return num;
 }
-
+// we can enroll 128 ids in the sensor
 void loop()                     // run over and over again
 {
   Serial.println("Ready to enroll a fingerprint!");
@@ -85,12 +65,12 @@ void loop()                     // run over and over again
   }
   Serial.print("Enrolling ID #");
   Serial.println(id);
-
+//enrollment process
   while (!  getFingerprintEnroll() );
 }
 
 uint8_t getFingerprintEnroll() {
-
+//take input till the right one
   int p = -1;
   Serial.print("Waiting for valid finger to enroll as #"); Serial.println(id);
   while (p != FINGERPRINT_OK) {
@@ -115,7 +95,8 @@ uint8_t getFingerprintEnroll() {
   }
 
   // OK success!
-
+//use of inbuilt functions to check the quality of image and 
+  //to give output on screen 
   p = finger.image2Tz(1);
   switch (p) {
     case FINGERPRINT_OK:
@@ -137,7 +118,9 @@ uint8_t getFingerprintEnroll() {
       Serial.println("Unknown error");
       return p;
   }
-
+// for enrollment it will take image first then .. 
+  //then ask you to remove finger 
+  //place finger again for verification
   Serial.println("Remove finger");
   delay(2000);
   p = 0;
