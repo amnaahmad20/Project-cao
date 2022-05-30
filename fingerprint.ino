@@ -90,7 +90,7 @@ Adafruit_Fingerprint finger = Adafruit_Fingerprint(&Serial2);
  //initilaizing pin of buzzer and relay
 int relayPin = 23;
 int buzzerPin = 15;
- //
+ //setting pins of buzzer and relay 
 void setup()
 {
  pinMode(relayPin, OUTPUT);
