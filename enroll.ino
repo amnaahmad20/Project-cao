@@ -13,7 +13,7 @@ SoftwareSerial mySerial(2, 3);
 
 
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
-
+//predefining the variable for id as we can store upto 128 ids
 uint8_t id;
 
 void setup()
