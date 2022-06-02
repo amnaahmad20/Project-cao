@@ -6,6 +6,7 @@
 #include <Adafruit_SSD1306.h>       //https://github.com/adafruit/Adafruit_SSD1306
 #include <SPI.h>
 #include <Wire.h>
+
  // predefining the width and height of led
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -94,10 +95,10 @@ int buzzerPin = 15;
 void setup()
 {
  pinMode(relayPin, OUTPUT);
- pinMode(buzzerPin, OUTPUT);
+
  
  digitalWrite(relayPin, LOW);
- digitalWrite(buzzerPin, LOW);
+
  
  Serial.begin(57600);
  Serial2.begin(115200);
@@ -233,7 +234,7 @@ int getFingerprintIDez()
    display.display();
  //relay pin is high to open the door lock  
    digitalWrite(relayPin, HIGH);
-   digitalWrite(buzzerPin, HIGH);
+  
    delay(3000);
    //after the delay of 3000 relay is again high to closed the door lock  
    display.clearDisplay();
@@ -246,7 +247,7 @@ int getFingerprintIDez()
    display.display();
    //after the delay of 3000 relay is again high to closed the door lock
    digitalWrite(relayPin, LOW);
-   digitalWrite(buzzerPin, LOW);
+  
    delay(3000);
    
    display.clearDisplay();
