@@ -1,6 +1,5 @@
 # Project-cao
-Azka youus (331331) 
-Cao project submission 
+project submission 
 Fingerprint sensor door lock
 Appratus:
 ESP32, fingerprint sensor r307 , door lock , relay , oled ssd 1306.
